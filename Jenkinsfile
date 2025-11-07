@@ -43,7 +43,7 @@ pipeline {
             steps {
                 script {
                     echo 'Levantando contenedores...'
-                    bat 'docker compose up --build  -d'
+                    bat 'docker compose up --build -d'
                 }
             }
         }
