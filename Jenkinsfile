@@ -1,59 +1,63 @@
-pipeline{
+pipeline {
     agent any
-    
-    stages{
-        //parar todos los servicios 
-        stage('Parando los servicios'){
-            steps{
-                sh '''
-                    docker-compose -p adj-demo down || true
-                '''
+
+    stages {
+        // Etapa para parar tdos los servicios
+        stage('Parando los servicios') {
+            steps {
+                script {
+                    echo 'Deteniendo contenedores (Windows)...'
+                    // En Windows con shell cmd, usar || exit 0 para evitar fallo si no hay contenedores
+                    bat 'docker compose -p adj-demo-c down || exit 0'
+                }
             }
         }
 
-        //eliminar las imagenes anteriores
-        stage('Borrando imagenes antiguas'){
-            steps{
-                sh '''
-                    IMAGES=$(docker images --filter "label=com.docker.compose.project=adj-demo" -q)
-                    if [ -n '$IMAGES' ]; then
-                        docker images rmi $IMAGES
-                    else
-                        echos echo 'No hay imagenes para borrar'
-                    fi
-                '''
-                
-            }
+        // Elimianr las imagenes anteriores  
+        stage('Borrando imagenes antiguas') {
+    steps {
+        script {
+            echo 'Eliminando imagenes antiguas...'
+            bat '''
+                @echo off
+                for /f "delims=" %%a in ('docker images -q adj-demo-c') do (
+                    echo Eliminando imagen %%a
+                    docker rmi -f %%a || echo Falló al eliminar %%a
+                )
+                exit /b 0
+            '''
         }
+    }
+}
 
-        //bajar la actualizacion
-        stage('Actualizando....'){
-            steps{
+
+        // Bajar la ctualizacion mas reciente
+        stage('Actualizando..') {
+            steps {
                 checkout scm
             }
         }
 
-        //levantar y desplegar el proyecto
-        stage('Construyendo y Desplegando...'){
-            steps{
-                sh '''
-                    docker compose up --build -d
-                '''
+        //Levantar y despegar el proyecto
+        stage('Levantando los servicios') {
+            steps {
+                script {
+                    echo 'Levantando contenedores...'
+                    bat 'docker compose -p adj-demo-c up -d --build'
+                }
             }
         }
     }
 
-    post{
-        success{
-            echo 'Pipeline ejecutado exitosamente'
+    post {
+        always {
+            echo 'Pipeline finalizado.'
         }
-
-        failure{
-            echo 'Error al ejecutar el pipeline'
+        success {
+            echo 'Pipeline ejecutado exitosamente.'
         }
-
-        always{
-            echo 'Pipeline finalizado'
+        failure {
+            echo 'Error al ejecutar el pipeline.'
         }
     }
 }

@@ -1,4 +1,4 @@
-package jcgr.demo.server;
+package adj.demo.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

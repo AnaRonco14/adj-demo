@@ -1,4 +1,4 @@
-import TestController from "./modules/test/test.controller";
+import TestController from "./modules/test/test.controller"
 
 function App() {
 
@@ -6,7 +6,7 @@ function App() {
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
-          <a href="" className="navbar-brand">JCGR-Demo</a>
+          <a href="" className="navbar-brand">Adj-Demo-c</a>
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav">
               <li className="nav-item">
@@ -20,7 +20,7 @@ function App() {
       <div className="container mt-5">
         <h2>Inicio</h2>
         <hr />
-        <button onClick={() => TestController.callToAPI} className="btn btn-success">Llamar a mi API</button>
+        <button onClick={() => TestController.callToAPI()} className="btn btn-success">Llamar a mi API</button>
       </div>
     </>
   )
