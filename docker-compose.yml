@@ -50,9 +50,9 @@ services:
 # aqui se pueden definir las redes entre contenedores
 networks:
   adj-net:
-    driver: bridge
+    external: true
 
 # aqui configuro los volumenes que ocupan los contenedores
 volumes:
   adj-volume:
-    driver: local
+    external: true
